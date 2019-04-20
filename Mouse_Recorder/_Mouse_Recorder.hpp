@@ -25,14 +25,12 @@ private:
 	/*time_t t;
 	struct tm * now;*/
 	__int16 minute, second;
-	std::vector<std::pair<WORD, WORD>> mouse_moves;
-	//using clock = std::chrono::steady_clock;
-	//std::chrono::high_resolution_clock::time_point m_start;			//"zmienna" ktora bedzie trzymac czas startowy		(czesc struktury steady_clock, przestrzeni nazw chrono)
-	//std::chrono::high_resolution_clock::time_point m_stop;			//"zmienna" ktora bedzie trzymac czas koncowy		(czesc struktury steady_clock, przestrzeni nazw chrono)
+	std::vector<std::pair<LONG, LONG>> mouse_moves;
 	using clock = std::chrono::steady_clock;
 	clock::time_point m_start;
 	COORD CORD;						//Obiekt struktury COORD, w ktorym znajduja sie koordynaty X i Y do ustawienia kursora
 	HANDLE H_OUT, H_IN;				//Zmienna przechowujace uchywyt do outputu oraz inputu okna
+	HWND Hwnd;
 	POINT Cursor_Pos;						//current cursor position
 	//////////////////////////////////////////////////////////////////////////////
 	/*
@@ -44,6 +42,8 @@ private:
 	/*
 		GETTERY PRIVATE
 	*/
+	SHORT get_cmd_cursor_position_x() const;
+	SHORT get_cmd_cursor_position_y() const;
 	LONG get_cursor_position_x() const;
 	LONG get_cursor_position_y() const;
 	//////////////////////////////////////////////////////////////////////////////

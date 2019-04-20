@@ -31,14 +31,24 @@ void _Mouse_Recorder::Clock_Format() const
 	}
 }
 
+SHORT _Mouse_Recorder::get_cmd_cursor_position_x() const
+{
+	return this->CORD.X;
+}
+
+SHORT _Mouse_Recorder::get_cmd_cursor_position_y() const
+{
+	return this->CORD.Y;
+}
+
 LONG _Mouse_Recorder::get_cursor_position_x() const
 {
-	return Cursor_Pos.x;
+	return this->Cursor_Pos.x;
 }
 
 LONG _Mouse_Recorder::get_cursor_position_y() const
 {
-	return Cursor_Pos.y;
+	return this->Cursor_Pos.y;
 }
 
 _Mouse_Recorder::_Mouse_Recorder() :
@@ -102,8 +112,9 @@ void _Mouse_Recorder::Menu()
 void _Mouse_Recorder::Record()
 {
 	m_start = clock::now();
-	INPUT_RECORD in_Buff[32]{};
-	DWORD events = 0;
+	SetForegroundWindow(Hwnd);
+	SetActiveWindow(Hwnd);
+	SetFocus(Hwnd);
 	bool record = true;
 	while (record == true)
 	{
@@ -112,85 +123,44 @@ void _Mouse_Recorder::Record()
 			record = false;
 		}
 		Clock();
-		GetNumberOfConsoleInputEvents(H_IN, &events);
-		if (events > 0)
-		{
-			ReadConsoleInput(H_IN, in_Buff, events, &events);
-		}
-		for (DWORD i = 0; i < events; i++)
-		{
-			switch (in_Buff[i].EventType)
-			{
-			case FOCUS_EVENT:
-			{
-				//m_bConsoleInFocus = in_Buff[i].Event.FocusEvent.bSetFocus;
-			}
-			break;
-
-			case MOUSE_EVENT:
-			{
-				switch (in_Buff[i].Event.MouseEvent.dwEventFlags)
-				{
-				case MOUSE_MOVED:
-				{
-					mouse_moves.emplace_back(std::make_pair(in_Buff[i].Event.MouseEvent.dwMousePosition.X, in_Buff[i].Event.MouseEvent.dwMousePosition.Y));
-				}
-				break;
-
-				case 0:
-				{
-					//for (int m = 0; m < 5; m++)
-						//m_mouseNewState[m] = (in_Buff[i].Event.MouseEvent.dwButtonState & (1 << m)) > 0;
-
-				}
-				break;
-
-				default:
-					break;
-				}
-			}
-			break;
-
-			default:
-				break;
-			}
-		}
+		GetCursorPos(&Cursor_Pos);
+		mouse_moves.emplace_back(std::make_pair(Cursor_Pos.x, Cursor_Pos.y));
 	}
 }
 
 void _Mouse_Recorder::Clock()
 {
 	second = duration_cast<seconds>(clock::now() - m_start).count();
-	
 	if (second % 60 == 0 && second > 0)
 	{
 		++minute;
 		m_start = clock::now();
 		second = 0;
 	}
-	SetCursorPosition(get_cursor_position_x() + 1, get_cursor_position_y() + 1);
+	SetCursorPosition(1, 1);
 	Clock_Format();
-	SetCursorPosition(get_cursor_position_x() + 1, get_cursor_position_y());
+	SetCursorPosition(1, 0);
 	std::cout << "To stop recording, press right shift";
 	std::this_thread::sleep_for(std::chrono::seconds(1));
-	Erase_Row(get_cursor_position_x() + 1, get_cursor_position_y() + 1);
+	Erase_Row(1,1);
 }
 
 void _Mouse_Recorder::Load_Recorded_Mouse_Events()
 {
 	if (mouse_moves.size() < 1)
 	{
-		std::cout << "Mouse wasnt be recorder yet";
+		std::cout << "Mouse wasnt be recorder yet" << '\n';
 		std::this_thread::sleep_for(std::chrono::seconds(3));	//sleep for 1 second
 	}
 	else
 	{
 		for (size_t i = 0; i < mouse_moves.size(); ++i)
 		{
-			std::cout << mouse_moves[i].first << ' ' << mouse_moves[i].second << '\n';
-			//SetCursorPosition(mouse_moves[i].first, mouse_moves[i].second);
-			std::this_thread::sleep_for(std::chrono::seconds(1));	//sleep for 1 second
+			SetCursorPos(mouse_moves[i].first, mouse_moves[i].second);
+			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
+		std::cout << "Loading complete" << '\n';
+		std::this_thread::sleep_for(std::chrono::seconds(3));	//sleep for 1 second
 	}
 }
 
