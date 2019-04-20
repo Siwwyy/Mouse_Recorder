@@ -25,6 +25,7 @@ private:
 	/*time_t t;
 	struct tm * now;*/
 	__int16 minute, second;
+	std::vector<std::pair<WORD, WORD>> mouse_moves;
 	//using clock = std::chrono::steady_clock;
 	//std::chrono::high_resolution_clock::time_point m_start;			//"zmienna" ktora bedzie trzymac czas startowy		(czesc struktury steady_clock, przestrzeni nazw chrono)
 	//std::chrono::high_resolution_clock::time_point m_stop;			//"zmienna" ktora bedzie trzymac czas koncowy		(czesc struktury steady_clock, przestrzeni nazw chrono)
@@ -56,8 +57,10 @@ public:
 	/*
 		FUNKCJE PUBLIC
 	*/
+	void Menu();
 	void Record();
 	void Clock();
+	void Load_Recorded_Mouse_Events();
 	void Erase_Row(const short CORD_X, const short CORD_Y);
 	//////////////////////////////////////////////////////////////////////////////
 	/*

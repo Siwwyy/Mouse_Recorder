@@ -10,7 +10,7 @@
 int main(int argc, char * argv[])
 {
 	_Mouse_Recorder Obj;
-	Obj.Record();
+	Obj.Menu();
 	system("pause");
 	return EXIT_SUCCESS;
 }
