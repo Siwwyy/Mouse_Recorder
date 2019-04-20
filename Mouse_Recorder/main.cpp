@@ -1,3 +1,7 @@
+/*
+ *			   Copyright (c) by Damian Andrysiak. All rights reserved.
+ *							Greetings for everyone!
+*/
 #include <iostream>
 #include <windows.h>
 #include <string.h>
