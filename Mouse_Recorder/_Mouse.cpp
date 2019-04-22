@@ -3,18 +3,17 @@
 using namespace std;
 
 _Mouse::_Mouse():
-	dwFlags(0),
-	dx(0),
-	dy(0),
-	dwData(0),
-	dwExtraInfo(0)
+	dwMousePosition({}),
+	dwButtonState(NULL),
+	dwControlKeyState(NULL),
+	dwEventFlags(NULL)
 {
 
 }
 
 void _Mouse::show_obj() const
 {
-	std::cout << dwFlags << ' ' << dx << ' ' << dy << ' ' << dwData << ' ' << dwExtraInfo << '\n';
+	std::cout << "[ X: " << dwMousePosition.X << " | Y: " << dwMousePosition.Y << " ] " << dwButtonState << ' ' << dwControlKeyState << ' ' << dwEventFlags << '\n';
 }
 
 void _Mouse::right_mouse_click_up()
@@ -91,6 +90,35 @@ void _Mouse::right_mouse_click()
 	::SendInput(1, &Input, sizeof(INPUT));
 }
 
+void _Mouse::double_click()
+{
+	//double times one single click to create a double click event
+	INPUT Input = { 0 };
+
+	// left down
+	Input.type = INPUT_MOUSE;
+	Input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+	::SendInput(1, &Input, sizeof(INPUT));
+
+	// left up
+	::ZeroMemory(&Input, sizeof(INPUT));
+	Input.type = INPUT_MOUSE;
+	Input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+	::SendInput(1, &Input, sizeof(INPUT));
+	
+
+	// left down
+	Input.type = INPUT_MOUSE;
+	Input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+	::SendInput(1, &Input, sizeof(INPUT));
+
+	// left up
+	::ZeroMemory(&Input, sizeof(INPUT));
+	Input.type = INPUT_MOUSE;
+	Input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+	::SendInput(1, &Input, sizeof(INPUT));
+}
+
 void _Mouse::move_mouse(const DWORD dx, const DWORD dy) const
 {
 	INPUT Input = { 0 };
@@ -102,70 +130,57 @@ void _Mouse::move_mouse(const DWORD dx, const DWORD dy) const
 	//try (GetSystemMetrics(SM_CXSCREEN) -1);
 }
 
-void _Mouse::Set_Mouse(const DWORD dwFlags, const DWORD dx, const DWORD dy, const DWORD dwData, const ULONG_PTR dwExtraInfo)
+void _Mouse::Set_dwMousePosition(const SHORT X, const SHORT Y)
 {
-	this->dwFlags = dwFlags;
-	this->dx = dx;
-	this->dy = dy;
-	this->dwData = dwData;
-	this->dwExtraInfo = dwExtraInfo;
+	this->dwMousePosition.X = X;
+	this->dwMousePosition.Y = Y;
 }
 
-void _Mouse::Set_dwFlags(const DWORD dwFlags)
+void _Mouse::Set_dwButtonState(const DWORD dwButtonState)
 {
-	this->dwFlags = dwFlags;
+	this->dwButtonState = dwButtonState;
 }
 
-void _Mouse::Set_dx(const DWORD dx)
+void _Mouse::Set_dwControlKeyState(const DWORD dwControlKeyState)
 {
-	this->dx = dx;
+	this->dwControlKeyState = dwControlKeyState;
 }
 
-void _Mouse::Set_dy(const DWORD dy)
+void _Mouse::Set_dwEventFlags(const DWORD dwEventFlags)
 {
-	this->dy = dy;
+	this->dwEventFlags = dwEventFlags;
 }
 
-void _Mouse::Set_dwData(const DWORD dwData)
+SHORT _Mouse::get_dwMousePosition_X() const
 {
-	this->dwData = dwData;
+	return dwMousePosition.X;
 }
 
-void _Mouse::Set_dwExtraInfo(const ULONG_PTR dwExtraInfo)
+SHORT _Mouse::get_dwMousePosition_Y() const
 {
-	this->dwExtraInfo = dwExtraInfo;
+	return dwMousePosition.Y;
 }
 
-const DWORD & _Mouse::get_dwFlags() const
+DWORD _Mouse::get_dwButtonState() const
 {
-	return this->dwFlags;
+	return dwButtonState;
 }
 
-const DWORD & _Mouse::get_dx() const
+DWORD _Mouse::get_dwControlKeyState() const
 {
-	return this->dx;
+	return dwControlKeyState;
 }
 
-const DWORD & _Mouse::get_dy() const
+DWORD _Mouse::get_dwEventFlags() const
 {
-	return this->dy;
-}
-
-const DWORD & _Mouse::get_dwData() const
-{
-	return this->dwData;
-}
-
-const ULONG_PTR & _Mouse::get_dwExtraInfo() const
-{
-	return this->dwExtraInfo;
+	return dwEventFlags;
 }
 
 _Mouse::~_Mouse()
 {
-	dwFlags = 0;
-	dx = 0;
-	dy = 0;
-	dwData = 0;
-	dwExtraInfo = 0;
+	dwMousePosition.X = 0;
+	dwMousePosition.Y = 0;
+	dwButtonState = 0;
+	dwControlKeyState = 0;
+	dwEventFlags = 0;
 }

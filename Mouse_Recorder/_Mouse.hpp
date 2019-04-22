@@ -18,11 +18,10 @@ private:
 	/*
 		ZMIENNE PRIVATE
 	*/
-	DWORD dwFlags;
-	DWORD dx;
-	DWORD dy;
-	DWORD dwData;
-	ULONG_PTR dwExtraInfo;
+	COORD dwMousePosition;
+	DWORD dwButtonState;
+	DWORD dwControlKeyState;
+	DWORD dwEventFlags;
 	//////////////////////////////////////////////////////////////////////////////
 public:
 	//////////////////////////////////////////////////////////////////////////////
@@ -41,17 +40,16 @@ public:
 	void left_mouse_click_down();
 	void left_mouse_click();
 	void right_mouse_click();
+	void double_click();
 	void move_mouse(const DWORD dx, const DWORD dy) const;
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		SETTERY PUBLIC
 	*/
-	void Set_Mouse(const DWORD dwFlags, const DWORD dx, const DWORD dy, const DWORD dwData, const ULONG_PTR dwExtraInfo);
-	void Set_dwFlags(const DWORD dwFlags);
-	void Set_dx(const DWORD dx);
-	void Set_dy(const DWORD dy);
-	void Set_dwData(const DWORD dwData);
-	void Set_dwExtraInfo(const ULONG_PTR dwExtraInfo);
+	void Set_dwMousePosition(const SHORT X, const SHORT Y);
+	void Set_dwButtonState(const DWORD dwButtonState);
+	void Set_dwControlKeyState(const DWORD dwControlKeyState);
+	void Set_dwEventFlags(const DWORD dwEventFlags);
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		OPERATORY PUBLIC
@@ -63,11 +61,11 @@ public:
 	/*
 		GETTERY PUBLIC
 	*/
-	const DWORD & get_dwFlags() const;
-	const DWORD & get_dx() const;
-	const DWORD & get_dy() const;
-	const DWORD & get_dwData() const;
-	const ULONG_PTR & get_dwExtraInfo() const;
+	SHORT get_dwMousePosition_X() const;
+	SHORT get_dwMousePosition_Y() const;
+	DWORD get_dwButtonState() const;
+	DWORD get_dwControlKeyState() const;
+	DWORD get_dwEventFlags() const;
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		DESTRUKTOR
