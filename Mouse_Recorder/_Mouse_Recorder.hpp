@@ -13,6 +13,13 @@
 #include <chrono>
 #include <thread>
 
+/////////////////////////////////////////////
+/*
+	OWN HEADERS
+*/
+#include "_Mouse.hpp"
+/////////////////////////////////////////////
+
 #pragma warning(disable : 4996);	//disable this warning, for localtime();
 
 class _Mouse_Recorder
@@ -24,8 +31,10 @@ private:
 	*/
 	/*time_t t;
 	struct tm * now;*/
+	_Mouse Mouse;
 	__int16 minute, second;
-	std::vector<std::pair<LONG, LONG>> mouse_moves;
+	//std::vector<std::pair<LONG, LONG>> mouse_moves;
+	std::vector<_Mouse> mouse_moves;
 	using clock = std::chrono::steady_clock;
 	clock::time_point m_start;
 	COORD CORD;						//Obiekt struktury COORD, w ktorym znajduja sie koordynaty X i Y do ustawienia kursora
@@ -36,6 +45,7 @@ private:
 	/*
 		FUNKCJE PRIVATE
 	*/
+	bool Mouse_Event(_MOUSE_EVENT_RECORD & krec, const HANDLE & _HANDLE_PARAM);
 	void SetCursorPosition(const short _X_AXIS, const short _Y_AXIS);	//Metoda ustawiajaca pozycje kursora
 	void Clock_Format() const;
 	//////////////////////////////////////////////////////////////////////////////

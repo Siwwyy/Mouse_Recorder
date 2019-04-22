@@ -116,9 +116,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="_Mouse.cpp" />
     <ClCompile Include="_Mouse_Recorder.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="_Mouse.hpp" />
     <ClInclude Include="_Mouse_Recorder.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
