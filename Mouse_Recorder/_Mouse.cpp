@@ -153,27 +153,27 @@ void _Mouse::Set_dwEventFlags(const DWORD dwEventFlags)
 
 SHORT _Mouse::get_dwMousePosition_X() const
 {
-	return dwMousePosition.X;
+	return this->dwMousePosition.X;
 }
 
 SHORT _Mouse::get_dwMousePosition_Y() const
 {
-	return dwMousePosition.Y;
+	return this->dwMousePosition.Y;
 }
 
 DWORD _Mouse::get_dwButtonState() const
 {
-	return dwButtonState;
+	return this->dwButtonState;
 }
 
 DWORD _Mouse::get_dwControlKeyState() const
 {
-	return dwControlKeyState;
+	return this->dwControlKeyState;
 }
 
 DWORD _Mouse::get_dwEventFlags() const
 {
-	return dwEventFlags;
+	return this->dwEventFlags;
 }
 
 _Mouse::~_Mouse()

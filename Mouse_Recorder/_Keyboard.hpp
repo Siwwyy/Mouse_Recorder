@@ -2,53 +2,42 @@
  *			   Copyright (c) by Damian Andrysiak. All rights reserved.
  *							Greetings for everyone!
 */
-#ifndef _MOUSE_H_
-#define _MOUSE_H_
+#ifndef _KEYBOARD_H_
+#define _KEYBOARD_H_
 
 #include <iostream>
 #include <windows.h>
 #include <string.h>
 
 
-class _Mouse
+class _Keyboard
 {
 private:
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		ZMIENNE PRIVATE
 	*/
+	DWORD keyboard_code;
 	COORD dwMousePosition;
-	DWORD dwButtonState;
-	DWORD dwControlKeyState;
-	DWORD dwEventFlags;
 	//////////////////////////////////////////////////////////////////////////////
 public:
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		KONSTRUKTORY PUBLIC
 	*/
-	_Mouse();
+	_Keyboard();
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		FUNKCJE PUBLIC
 	*/
+	void button_press();
 	void show_obj() const;
-	void right_mouse_click_up();
-	void right_mouse_click_down();
-	void left_mouse_click_up();
-	void left_mouse_click_down();
-	void left_mouse_click();
-	void right_mouse_click();
-	void double_click();
-	void move_mouse(const DWORD dx, const DWORD dy) const;
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		SETTERY PUBLIC
 	*/
+	void Set_keyboard_code(const DWORD keyboard_code);
 	void Set_dwMousePosition(const SHORT X, const SHORT Y);
-	void Set_dwButtonState(const DWORD dwButtonState);
-	void Set_dwControlKeyState(const DWORD dwControlKeyState);
-	void Set_dwEventFlags(const DWORD dwEventFlags);
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		OPERATORY PUBLIC
@@ -60,16 +49,14 @@ public:
 	/*
 		GETTERY PUBLIC
 	*/
+	DWORD get_keyboard_code() const;
 	SHORT get_dwMousePosition_X() const;
 	SHORT get_dwMousePosition_Y() const;
-	DWORD get_dwButtonState() const;
-	DWORD get_dwControlKeyState() const;
-	DWORD get_dwEventFlags() const;
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		DESTRUKTOR
 	*/
-	virtual ~_Mouse();
+	virtual ~_Keyboard();
 };
 
-#endif /* _MOUSE_H_ */
+#endif /* _KEYBOARD_H_ */

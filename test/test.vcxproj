@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{5B49D2DB-9980-4E06-BA29-3E1BB40185AF}</ProjectGuid>
-    <RootNamespace>MouseRecorder</RootNamespace>
+    <ProjectGuid>{8F0191AE-DABE-4FF1-8922-F71A693095E8}</ProjectGuid>
+    <RootNamespace>test</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -116,14 +116,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="_Keyboard.cpp" />
-    <ClCompile Include="_Mouse.cpp" />
-    <ClCompile Include="_Mouse_Recorder.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="_Keyboard.hpp" />
-    <ClInclude Include="_Mouse.hpp" />
-    <ClInclude Include="_Mouse_Recorder.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

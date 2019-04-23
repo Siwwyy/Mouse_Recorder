@@ -18,6 +18,7 @@
 	OWN HEADERS
 */
 #include "_Mouse.hpp"
+#include "_Keyboard.hpp"
 /////////////////////////////////////////////
 
 #pragma warning(disable : 4996);	//disable this warning, for localtime();
@@ -32,22 +33,26 @@ private:
 	/*time_t t;
 	struct tm * now;*/
 	_Mouse Mouse;
+	_Keyboard Keyboard;
 	__int16 minute, second;
-	//std::vector<std::pair<LONG, LONG>> mouse_moves;
 	std::vector<_Mouse> mouse_moves;
+	std::vector<_Keyboard> keyboard_event;
 	using clock = std::chrono::steady_clock;
 	clock::time_point m_start;
 	COORD CORD;						//Obiekt struktury COORD, w ktorym znajduja sie koordynaty X i Y do ustawienia kursora
 	HANDLE H_OUT, H_IN;				//Zmienna przechowujace uchywyt do outputu oraz inputu okna
 	HWND Hwnd;
 	POINT Cursor_Pos;						//current cursor position
+
+	HHOOK mouseHook;
+
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		FUNKCJE PRIVATE
 	*/
-	bool Mouse_Event(_MOUSE_EVENT_RECORD & krec, const HANDLE & _HANDLE_PARAM);
 	void SetCursorPosition(const short _X_AXIS, const short _Y_AXIS);	//Metoda ustawiajaca pozycje kursora
 	void Clock_Format() const;
+	//LRESULT __stdcall MouseHookCallback(int nCode, WPARAM wParam, LPARAM lParam);
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		GETTERY PRIVATE
