@@ -28,6 +28,7 @@ public:
 		KONSTRUKTORY PUBLIC
 	*/
 	_Mouse();
+	_Mouse(const SHORT X, const SHORT Y);
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		FUNKCJE PUBLIC

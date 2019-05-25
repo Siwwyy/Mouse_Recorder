@@ -26,6 +26,7 @@ public:
 		KONSTRUKTORY PUBLIC
 	*/
 	_Keyboard();
+	_Keyboard(const DWORD keyboard_code);
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		FUNKCJE PUBLIC

@@ -9,6 +9,11 @@ _Keyboard::_Keyboard():
 
 }
 
+_Keyboard::_Keyboard(const DWORD keyboard_code):
+	keyboard_code(keyboard_code)
+{
+}
+
 void _Keyboard::button_press()
 {
 	keybd_event(((BYTE)keyboard_code), NULL, NULL, NULL);
@@ -16,7 +21,7 @@ void _Keyboard::button_press()
 
 void _Keyboard::show_obj() const
 {
-	std::cout << "[ X: " << dwMousePosition.X << " | Y: " << dwMousePosition.Y << " ] " << keyboard_code << '\n';
+	std::cout << "[ X: " << dwMousePosition.X << " | Y: " << dwMousePosition.Y << " ] " << static_cast<char>(keyboard_code) << '\n';
 }
 
 void _Keyboard::Set_keyboard_code(const DWORD keyboard_code)

@@ -4,6 +4,18 @@ using namespace std;
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
+
+HHOOK keyboardHook;
+HHOOK mouseHook;
+POINT Cursor_Pos;
+
+bool _Mouse_Recorder::recorder = false;
+_Mouse _Mouse_Recorder::Mouse;
+_Keyboard _Mouse_Recorder::Keyboard;
+std::vector<std::pair<_Mouse, _Keyboard>> _Mouse_Recorder::mouse_moves{};
+//std::vector<__int32> mouse_moves(0);
+//std::vector<__int32> keyboard_event(0);
+
 void _Mouse_Recorder::SetCursorPosition(const short _X_AXIS, const short _Y_AXIS)
 {
 	CORD.X = _X_AXIS;
@@ -31,6 +43,46 @@ void _Mouse_Recorder::Clock_Format() const
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+LRESULT CALLBACK _Mouse_Recorder::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+//LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	HWND fwindow = GetForegroundWindow();
+	PKBDLLHOOKSTRUCT key = (PKBDLLHOOKSTRUCT)lParam;
+	//a key was pressed
+	if (wParam == WM_KEYDOWN && nCode == HC_ACTION)
+	{
+		//std::cout << ((char)(key->vkCode)) << ' ';
+		if (((char)(key->vkCode)) == VK_F1)
+		{
+			//std::cout << 'n' << '\n';
+			recorder = true;
+		}
+		//Mouse
+		//Mouse.Set_dwMousePosition(-1000, -1000);
+		//Keyboard.Set_keyboard_code(key->vkCode);
+		//Keyboard.show_obj();
+		mouse_moves.emplace_back(std::make_pair(_Mouse(-1000,-1000),_Keyboard(key->vkCode)));
+	}
+	return CallNextHookEx(keyboardHook, nCode, wParam, lParam);
+}
+
+LRESULT CALLBACK _Mouse_Recorder::mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
+//LRESULT CALLBACK mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	HWND fwindow = GetForegroundWindow();
+	PMSLLHOOKSTRUCT mouse = (PMSLLHOOKSTRUCT)lParam;
+	//std::cout << "[ X: " << mouse->pt.x << " | Y: " << mouse->pt.y << '\n';
+	/*Mouse.Set_dwMousePosition(mouse->pt.x, mouse->pt.y);
+	Keyboard.Set_keyboard_code(-1000);
+	Mouse.show_obj();*/
+	mouse_moves.emplace_back(std::make_pair(_Mouse(mouse->pt.x, mouse->pt.y), _Keyboard(-1000)));
+	return CallNextHookEx(mouseHook, nCode, wParam, lParam);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 SHORT _Mouse_Recorder::get_cmd_cursor_position_x() const
 {
 	return this->CORD.X;
@@ -41,24 +93,15 @@ SHORT _Mouse_Recorder::get_cmd_cursor_position_y() const
 	return this->CORD.Y;
 }
 
-LONG _Mouse_Recorder::get_cursor_position_x() const
-{
-	return this->Cursor_Pos.x;
-}
-
-LONG _Mouse_Recorder::get_cursor_position_y() const
-{
-	return this->Cursor_Pos.y;
-}
-
 _Mouse_Recorder::_Mouse_Recorder() :
-	mouse_moves(0),
+	/*mouse_moves(0),*/
 	minute(0),
 	second(0)
 {
 	H_OUT = GetStdHandle(STD_OUTPUT_HANDLE);
 	H_IN = GetStdHandle(STD_INPUT_HANDLE);
 	SetConsoleMode(H_IN, ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);		//set the console mode to enable window mouse input and extended flags
+
 }
 
 void _Mouse_Recorder::Menu()
@@ -82,7 +125,9 @@ void _Mouse_Recorder::Menu()
 		{
 			SetConsoleTextAttribute(H_IN, FOREGROUND_RED | FOREGROUND_INTENSITY);
 			system("cls");
+		//	FreeConsole();
 			Record();
+			//FreeConsole();
 		}
 		break;
 
@@ -111,56 +156,64 @@ void _Mouse_Recorder::Menu()
 
 void _Mouse_Recorder::Record()
 {
-	mouse_moves.clear();
-	keyboard_event.clear();
 	m_start = clock::now();
-	SetForegroundWindow(Hwnd);
-	SetActiveWindow(Hwnd);
-	SetFocus(Hwnd);
-	_MOUSE_EVENT_RECORD Recorder;
-	bool record = true;
-	__int8 keyboard_number = 0;
-	char i = ' ';
-	while (record == true)
+	keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, 0, 0);
+	mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseHookProc, 0, 0);
+	MSG message{};
+	while (TRUE)
 	{
-		if (GetAsyncKeyState(VK_RSHIFT))
+		// Check to see if any messages are waiting in the queue
+		while (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
 		{
-			record = false;
+			// Translate the message and dispatch it to WindowProc()
+			mouse_moves.emplace_back(std::make_pair(_Mouse(Mouse.get_dwMousePosition_X(), Mouse.get_dwMousePosition_Y()), _Keyboard(Keyboard.get_keyboard_code())));
+			TranslateMessage(&message);
+			DispatchMessage(&message);
 		}
-		Clock();
-		GetCursorPos(&Cursor_Pos);
-		Mouse.Set_dwMousePosition(((SHORT)Cursor_Pos.x), ((SHORT)Cursor_Pos.y));
-		if (GetAsyncKeyState(FROM_LEFT_1ST_BUTTON_PRESSED))
+
+
+		//that instruction breaks the loop runtime
+		if (recorder == true)
 		{
-			Mouse.Set_dwButtonState(((DWORD)FROM_LEFT_1ST_BUTTON_PRESSED));
-		}
-		else if (GetAsyncKeyState(RIGHTMOST_BUTTON_PRESSED))
-		{
-			Mouse.Set_dwButtonState(((DWORD)RIGHTMOST_BUTTON_PRESSED));
-		}
-	/*	if (GetAsyncKeyState('d'))
-		{
-			Keyboard.Set_keyboard_code(((DWORD)i));
-			Keyboard.Set_dwMousePosition(((SHORT)Cursor_Pos.x), ((SHORT)Cursor_Pos.y));
-			keyboard_event.emplace_back(Keyboard);
 			break;
-		}*/
-		/*for (i = 8; i <= 255; ++i)
-		{
-			if (GetAsyncKeyState(i) == -32767)
-			{
-				Keyboard.Set_keyboard_code(((DWORD)i));
-				Keyboard.Set_dwMousePosition(((SHORT)Cursor_Pos.x), ((SHORT)Cursor_Pos.y));
-				keyboard_event.emplace_back(Keyboard);
-				break;
-			}
-		}*/
-		mouse_moves.emplace_back(Mouse);
-		Keyboard.Set_keyboard_code(((DWORD)NULL));
-		Keyboard.Set_dwMousePosition(((DWORD)NULL), ((DWORD)NULL));
-		Mouse.Set_dwMousePosition(((DWORD)NULL), ((DWORD)NULL));
-		Mouse.Set_dwButtonState(((DWORD)NULL));
+		}
+		
+
 	}
+	recorder = false;
+	//while (record == true)
+	//{
+	//	if (recorder == true)
+	//	{
+	//		message.lParam = NULL;
+	//		message.hwnd = NULL;
+	//		message.message = NULL;
+	//		message.wParam = NULL;
+	//		//message.pt = nullptr;
+	//		//goto KONIEC;
+	//		//break;
+	//	
+	//		GetMessage(nullptr, NULL, 0, 0);
+	//		std::cout << 'n' << '\n';
+	//	}
+	//	else
+	//	{
+	//		GetMessage(&message, NULL, 0, 0);
+	//		TranslateMessage(&message);
+	//		DispatchMessage(&message);
+	//		std::cout << 't' << '\n';
+	//	}
+
+	//	/*mouse_moves.emplace_back(Mouse);
+	//	Keyboard.Set_keyboard_code(((DWORD)NULL));
+	//	Keyboard.Set_dwMousePosition(((DWORD)NULL), ((DWORD)NULL));
+	//	Mouse.Set_dwMousePosition(((DWORD)NULL), ((DWORD)NULL));
+	//	Mouse.Set_dwButtonState(((DWORD)NULL));*/
+	//}
+	//unhook hooked elements
+	//KONIEC:
+	UnhookWindowsHookEx(keyboardHook);
+	UnhookWindowsHookEx(mouseHook);
 }
 
 void _Mouse_Recorder::Clock()
@@ -182,7 +235,8 @@ void _Mouse_Recorder::Clock()
 
 void _Mouse_Recorder::Load_Recorded_Mouse_Events()
 {
-	if (mouse_moves.size() < 1)
+	if (mouse_moves.size() == 0)
+	//if(true)
 	{
 		std::cout << "Mouse wasnt be recorder yet" << '\n';
 		std::this_thread::sleep_for(std::chrono::seconds(3));	//sleep for 1 second
@@ -193,7 +247,12 @@ void _Mouse_Recorder::Load_Recorded_Mouse_Events()
 		bool is_pressed_RBM = false;		//if is pressed right button mouse
 		bool double_click_blocker = false;
 		size_t keyboard_vector_counter = 0;
-		std::cout << keyboard_event.size() << '\n';
+		for (size_t i = 0; i < mouse_moves.size(); ++i)
+		{
+			mouse_moves[i].first.show_obj();
+			mouse_moves[i].second.show_obj();
+		}
+		/*std::cout << keyboard_event.size() << '\n';
 		for (size_t i = 0; i < mouse_moves.size(); ++i)
 		{
 			mouse_moves[i].show_obj();
@@ -244,13 +303,12 @@ void _Mouse_Recorder::Load_Recorded_Mouse_Events()
 				}
 			}
 			std::this_thread::sleep_for(std::chrono::seconds(1));
-		}
+		}*/
 		//turn off the used buttons
 		//mouse_moves[mouse_moves.size() - 1].left_mouse_click_down();
 		//mouse_moves[mouse_moves.size() - 1].right_mouse_click_down();
 		system("pause");
 		std::cout << "Loading complete" << '\n';
-	
 		std::this_thread::sleep_for(std::chrono::seconds(3));	//sleep for 1 second
 	}
 }
