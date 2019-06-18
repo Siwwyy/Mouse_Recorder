@@ -6,11 +6,11 @@
 #define _MOUSE_RECORDER_H_
 
 #include <iostream>
-//#include <windows.h>
 #include <string.h>
 #include <vector>
 #include <time.h>
 #include <chrono>
+#include <mutex>
 #include <thread>
 #include <Windows.h>
 #include <stdio.h>
@@ -35,8 +35,6 @@ private:
 	static _Keyboard Keyboard;
 	__int16 minute, second;
 	static bool recorder;
-	//std::vector<std::pair<_Mouse,_Keyboard>> mouse_moves;
-	//std::vector<std::pair<_Mouse,_Keyboard>> mouse_moves;
 	static std::vector<std::pair<_Mouse,_Keyboard>> mouse_moves;
 	using clock = std::chrono::steady_clock;
 	clock::time_point m_start;
@@ -48,22 +46,14 @@ private:
 	HANDLE H_OUT, H_IN;				//Zmienna przechowujace uchywyt do outputu oraz inputu okna
 	HWND Hwnd;
 	bool record = true;
-	/*LRESULT * ptr_keyboard;
-	LRESULT * ptr_mouse;*/
-//	HHOOK mouseHook;
-	//new 
-				//current cursor position
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		FUNKCJE PRIVATE
 	*/
 	void SetCursorPosition(const short _X_AXIS, const short _Y_AXIS);	//Metoda ustawiajaca pozycje kursora
 	void Clock_Format() const;
-	//LRESULT __stdcall MouseHookCallback(int nCode, WPARAM wParam, LPARAM lParam);
 
-	//constexpr LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
-	//constexpr LRESULT CALLBACK mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam);
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -72,8 +62,6 @@ private:
 	*/
 	SHORT get_cmd_cursor_position_x() const;
 	SHORT get_cmd_cursor_position_y() const;
-	//LONG get_cursor_position_x() const;
-	//LONG get_cursor_position_y() const;
 	//////////////////////////////////////////////////////////////////////////////
 public:
 	//////////////////////////////////////////////////////////////////////////////

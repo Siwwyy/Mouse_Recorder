@@ -41,6 +41,8 @@ int main(int argc, char * argv[])
 	//std::cout << &tab[0] << ' ' << tab[0] << '\n';
 	//foo1(tab, size);
 	//std::cout << &tab[0] << ' ' << tab[0] << '\n';
+	/*int a = 10;
+	float c = (double)a;*/
 	_Mouse_Recorder Obj;
 	Obj.Menu();
 	system("pause");

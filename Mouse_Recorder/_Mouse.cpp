@@ -21,6 +21,16 @@ _Mouse::_Mouse(const SHORT X, const SHORT Y) :
 	this->dwMousePosition.Y = Y;
 }
 
+_Mouse::_Mouse(const SHORT X, const SHORT Y, const DWORD dwButtonState) :
+	dwMousePosition({}),
+	dwButtonState(dwButtonState),
+	dwControlKeyState(NULL),
+	dwEventFlags(NULL)
+{
+	this->dwMousePosition.X = X;
+	this->dwMousePosition.Y = Y;
+}
+
 void _Mouse::show_obj() const
 {
 	std::cout << "[ X: " << dwMousePosition.X << " | Y: " << dwMousePosition.Y << " ] " << dwButtonState << ' ' << dwControlKeyState << ' ' << dwEventFlags << '\n';

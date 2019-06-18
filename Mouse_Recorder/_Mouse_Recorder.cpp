@@ -13,8 +13,6 @@ bool _Mouse_Recorder::recorder = false;
 _Mouse _Mouse_Recorder::Mouse;
 _Keyboard _Mouse_Recorder::Keyboard;
 std::vector<std::pair<_Mouse, _Keyboard>> _Mouse_Recorder::mouse_moves{};
-//std::vector<__int32> mouse_moves(0);
-//std::vector<__int32> keyboard_event(0);
 
 void _Mouse_Recorder::SetCursorPosition(const short _X_AXIS, const short _Y_AXIS)
 {
@@ -46,38 +44,27 @@ void _Mouse_Recorder::Clock_Format() const
 ////////////////////////////////////////////////////////////////////////////////
 
 LRESULT CALLBACK _Mouse_Recorder::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
-//LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	HWND fwindow = GetForegroundWindow();
 	PKBDLLHOOKSTRUCT key = (PKBDLLHOOKSTRUCT)lParam;
-	//a key was pressed
 	if (wParam == WM_KEYDOWN && nCode == HC_ACTION)
 	{
-		//std::cout << ((char)(key->vkCode)) << ' ';
+		std::cout << ((char)(key->vkCode)) << ' ';
 		if (((char)(key->vkCode)) == VK_F1)
 		{
-			//std::cout << 'n' << '\n';
 			recorder = true;
 		}
-		//Mouse
-		//Mouse.Set_dwMousePosition(-1000, -1000);
-		//Keyboard.Set_keyboard_code(key->vkCode);
-		//Keyboard.show_obj();
-		mouse_moves.emplace_back(std::make_pair(_Mouse(-1000,-1000),_Keyboard(key->vkCode)));
+		mouse_moves.emplace_back(std::make_pair(_Mouse(-1000,-1000),_Keyboard(((char)(key->vkCode)))));
 	}
 	return CallNextHookEx(keyboardHook, nCode, wParam, lParam);
 }
 
 LRESULT CALLBACK _Mouse_Recorder::mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
-//LRESULT CALLBACK mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	HWND fwindow = GetForegroundWindow();
 	PMSLLHOOKSTRUCT mouse = (PMSLLHOOKSTRUCT)lParam;
-	//std::cout << "[ X: " << mouse->pt.x << " | Y: " << mouse->pt.y << '\n';
-	/*Mouse.Set_dwMousePosition(mouse->pt.x, mouse->pt.y);
-	Keyboard.Set_keyboard_code(-1000);
-	Mouse.show_obj();*/
-	mouse_moves.emplace_back(std::make_pair(_Mouse(mouse->pt.x, mouse->pt.y), _Keyboard(-1000)));
+	//std::cout << "[ X: " << mouse->pt.x << " | Y: " << mouse->pt.y << " |" << wParam << '\n';
+	mouse_moves.emplace_back(std::make_pair(_Mouse(mouse->pt.x, mouse->pt.y, wParam), _Keyboard(-1000)));
 	return CallNextHookEx(mouseHook, nCode, wParam, lParam);
 }
 
@@ -162,56 +149,17 @@ void _Mouse_Recorder::Record()
 	MSG message{};
 	while (TRUE)
 	{
-		// Check to see if any messages are waiting in the queue
 		while (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
 		{
-			// Translate the message and dispatch it to WindowProc()
-			mouse_moves.emplace_back(std::make_pair(_Mouse(Mouse.get_dwMousePosition_X(), Mouse.get_dwMousePosition_Y()), _Keyboard(Keyboard.get_keyboard_code())));
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 		}
-
-
-		//that instruction breaks the loop runtime
 		if (recorder == true)
 		{
 			break;
 		}
-		
-
 	}
 	recorder = false;
-	//while (record == true)
-	//{
-	//	if (recorder == true)
-	//	{
-	//		message.lParam = NULL;
-	//		message.hwnd = NULL;
-	//		message.message = NULL;
-	//		message.wParam = NULL;
-	//		//message.pt = nullptr;
-	//		//goto KONIEC;
-	//		//break;
-	//	
-	//		GetMessage(nullptr, NULL, 0, 0);
-	//		std::cout << 'n' << '\n';
-	//	}
-	//	else
-	//	{
-	//		GetMessage(&message, NULL, 0, 0);
-	//		TranslateMessage(&message);
-	//		DispatchMessage(&message);
-	//		std::cout << 't' << '\n';
-	//	}
-
-	//	/*mouse_moves.emplace_back(Mouse);
-	//	Keyboard.Set_keyboard_code(((DWORD)NULL));
-	//	Keyboard.Set_dwMousePosition(((DWORD)NULL), ((DWORD)NULL));
-	//	Mouse.Set_dwMousePosition(((DWORD)NULL), ((DWORD)NULL));
-	//	Mouse.Set_dwButtonState(((DWORD)NULL));*/
-	//}
-	//unhook hooked elements
-	//KONIEC:
 	UnhookWindowsHookEx(keyboardHook);
 	UnhookWindowsHookEx(mouseHook);
 }
@@ -236,7 +184,6 @@ void _Mouse_Recorder::Clock()
 void _Mouse_Recorder::Load_Recorded_Mouse_Events()
 {
 	if (mouse_moves.size() == 0)
-	//if(true)
 	{
 		std::cout << "Mouse wasnt be recorder yet" << '\n';
 		std::this_thread::sleep_for(std::chrono::seconds(3));	//sleep for 1 second
@@ -246,68 +193,60 @@ void _Mouse_Recorder::Load_Recorded_Mouse_Events()
 		bool is_pressed_LBM = false;		//if is pressed left button mouse
 		bool is_pressed_RBM = false;		//if is pressed right button mouse
 		bool double_click_blocker = false;
+		bool wait = false;
 		size_t keyboard_vector_counter = 0;
-		for (size_t i = 0; i < mouse_moves.size(); ++i)
+	/*	for (size_t i = 0; i < mouse_moves.size(); ++i)
 		{
 			mouse_moves[i].first.show_obj();
-			mouse_moves[i].second.show_obj();
-		}
-		/*std::cout << keyboard_event.size() << '\n';
+		}*/
 		for (size_t i = 0; i < mouse_moves.size(); ++i)
 		{
-			mouse_moves[i].show_obj();
-			if (mouse_moves[i].get_dwMousePosition_X() != 0 || mouse_moves[i].get_dwMousePosition_Y() != 0)
+			if (mouse_moves[i].first.get_dwMousePosition_X() != -1000 && mouse_moves[i].first.get_dwMousePosition_Y() != -1000)
 			{
-				SetCursorPos(mouse_moves[i].get_dwMousePosition_X(), mouse_moves[i].get_dwMousePosition_Y());
-				if (i <= (mouse_moves.size() - 2))
+				SetCursorPos(mouse_moves[i].first.get_dwMousePosition_X(), mouse_moves[i].first.get_dwMousePosition_Y());
+				if (mouse_moves[i].first.get_dwButtonState() >= 513)
 				{
-					if (mouse_moves[i].get_dwMousePosition_X() == mouse_moves[i + 1].get_dwMousePosition_X() && mouse_moves[i].get_dwMousePosition_Y() == mouse_moves[i + 1].get_dwMousePosition_Y())
+					if (mouse_moves[i].first.get_dwButtonState() == 513)
 					{
-						if (mouse_moves[i].get_dwButtonState() == 1 && mouse_moves[i + 1].get_dwButtonState() == 1 && double_click_blocker == false)
-						{
-							double_click_blocker = true;
-							std::cout << 'd' << '\n';
-							mouse_moves[i].double_click();
-							continue;
-						}
+						//std::this_thread::sleep_for(std::chrono::milliseconds(10));
+						//mouse_moves[i].first.left_mouse_click_up();
+						mouse_moves[i].first.left_mouse_click();
+						std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+						//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					}
-					else
+					//else if (mouse_moves[i].first.get_dwButtonState() == 514)
+					//{
+					//	//std::this_thread::sleep_for(std::chrono::milliseconds(1));
+					//	mouse_moves[i].first.left_mouse_click_down();
+					//	//std::this_thread::sleep_for(std::chrono::milliseconds(1));
+					//}
+
+					if (mouse_moves[i].first.get_dwButtonState() == 516)
 					{
-						double_click_blocker = false;
+						
+						//mouse_moves[i].first.right_mouse_click_up();
+						mouse_moves[i].first.right_mouse_click();
+						std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+						//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					}
-				}
-				if (mouse_moves[i].get_dwButtonState() == 1)
-				{
-					is_pressed_LBM = true;
-					is_pressed_RBM = false;
-					mouse_moves[i].left_mouse_click();
-				}
-				else if (mouse_moves[i].get_dwButtonState() == 2)
-				{
-					is_pressed_LBM = false;
-					is_pressed_RBM = true;
-					mouse_moves[i].right_mouse_click();
-				}
-				else
-				{
-					is_pressed_LBM = false;
-					is_pressed_RBM = false;
-				}
-				if (keyboard_event.size() > 0)
-				{
-					if (keyboard_event[keyboard_vector_counter].get_dwMousePosition_X() == mouse_moves[i].get_dwMousePosition_X() && keyboard_event[keyboard_vector_counter].get_dwMousePosition_Y() == mouse_moves[i].get_dwMousePosition_Y())
-					{
-						keyboard_event[keyboard_vector_counter].button_press();
-						++keyboard_vector_counter;
-					}
+					//else if (mouse_moves[i].first.get_dwButtonState() == 517)
+					//{
+					//	//std::this_thread::sleep_for(std::chrono::milliseconds(1));
+					//	mouse_moves[i].first.right_mouse_click_down();
+					//	//std::this_thread::sleep_for(std::chrono::milliseconds(1));
+					//}
 				}
 			}
-			std::this_thread::sleep_for(std::chrono::seconds(1));
-		}*/
-		//turn off the used buttons
-		//mouse_moves[mouse_moves.size() - 1].left_mouse_click_down();
-		//mouse_moves[mouse_moves.size() - 1].right_mouse_click_down();
-		system("pause");
+			else
+			{
+				if (mouse_moves[i].second.get_keyboard_code() != -1000)
+				{
+					mouse_moves[i].second.button_press();
+					std::this_thread::sleep_for(std::chrono::milliseconds(10));
+				}
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		}
 		std::cout << "Loading complete" << '\n';
 		std::this_thread::sleep_for(std::chrono::seconds(3));	//sleep for 1 second
 	}

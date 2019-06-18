@@ -29,6 +29,7 @@ public:
 	*/
 	_Mouse();
 	_Mouse(const SHORT X, const SHORT Y);
+	_Mouse(const SHORT X, const SHORT Y, const DWORD dwButtonState);
 	//////////////////////////////////////////////////////////////////////////////
 	/*
 		FUNKCJE PUBLIC
