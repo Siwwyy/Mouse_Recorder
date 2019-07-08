@@ -237,14 +237,15 @@ void _Mouse_Recorder::Load_Recorded_Mouse_Events()
 					//}
 				}
 			}
-			else
+			else if (mouse_moves[i].second.get_keyboard_code() != -1000)
 			{
-				if (mouse_moves[i].second.get_keyboard_code() != -1000)
-				{
-					mouse_moves[i].second.button_press();
-					std::this_thread::sleep_for(std::chrono::milliseconds(10));
-				}
+				mouse_moves[i].second.button_press();
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			}
+		/*	else
+			{
+				std::this_thread::sleep_for(std::chrono::seconds(1));
+			}*/
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 		std::cout << "Loading complete" << '\n';

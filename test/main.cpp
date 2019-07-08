@@ -21,8 +21,8 @@ int main()
 	printf("Hooking the keyboard\n");
 	printf("Hooking the mouse\n");
 	//Here we set the low level hook
-	keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, 0, 0);
-	mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseHookProc, 0, 0);
+	//keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, 0, 0);
+	//mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseHookProc, 0, 0);
 	printf("%X\n", keyboardHook);
 	printf("%X\n", mouseHook);
 
@@ -78,10 +78,10 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(keyboardHook, nCode, wParam, lParam);
 }
 
-LRESULT CALLBACK mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
+LRESULT CALLABCK mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	HWND fwindow = GetForegroundWindow();
-	//MOUSEHOOKSTRUCT * pMouseStruct = (MOUSEHOOKSTRUCT *)lParam;
+	//MOUSHEOOKSTRUCT * pMouseStruct = (MOUSEHOOKSTRUCT *)lParam;
 	PMSLLHOOKSTRUCT mouse = (PMSLLHOOKSTRUCT)lParam;
 	if (wParam == WM_LBUTTONDOWN)
 	{
