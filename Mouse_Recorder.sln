@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mouse_Recorder", "Mouse_Recorder\Mouse_Recorder.vcxproj", "{5B49D2DB-9980-4E06-BA29-3E1BB40185AF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{8F0191AE-DABE-4FF1-8922-F71A693095E8}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "thread_tutorial", "thread_tutorial\thread_tutorial.vcxproj", "{7F96D29D-CC05-4645-AF2C-229BB35EC327}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Mouse_Recorder_Setup", "Mouse_Recorder_Setup\Mouse_Recorder_Setup.vdproj", "{F0EF4413-1193-4BCD-A6E7-001A3399FE8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,22 +23,10 @@ Global
 		{5B49D2DB-9980-4E06-BA29-3E1BB40185AF}.Release|x64.Build.0 = Release|x64
 		{5B49D2DB-9980-4E06-BA29-3E1BB40185AF}.Release|x86.ActiveCfg = Release|Win32
 		{5B49D2DB-9980-4E06-BA29-3E1BB40185AF}.Release|x86.Build.0 = Release|Win32
-		{8F0191AE-DABE-4FF1-8922-F71A693095E8}.Debug|x64.ActiveCfg = Debug|x64
-		{8F0191AE-DABE-4FF1-8922-F71A693095E8}.Debug|x64.Build.0 = Debug|x64
-		{8F0191AE-DABE-4FF1-8922-F71A693095E8}.Debug|x86.ActiveCfg = Debug|Win32
-		{8F0191AE-DABE-4FF1-8922-F71A693095E8}.Debug|x86.Build.0 = Debug|Win32
-		{8F0191AE-DABE-4FF1-8922-F71A693095E8}.Release|x64.ActiveCfg = Release|x64
-		{8F0191AE-DABE-4FF1-8922-F71A693095E8}.Release|x64.Build.0 = Release|x64
-		{8F0191AE-DABE-4FF1-8922-F71A693095E8}.Release|x86.ActiveCfg = Release|Win32
-		{8F0191AE-DABE-4FF1-8922-F71A693095E8}.Release|x86.Build.0 = Release|Win32
-		{7F96D29D-CC05-4645-AF2C-229BB35EC327}.Debug|x64.ActiveCfg = Debug|x64
-		{7F96D29D-CC05-4645-AF2C-229BB35EC327}.Debug|x64.Build.0 = Debug|x64
-		{7F96D29D-CC05-4645-AF2C-229BB35EC327}.Debug|x86.ActiveCfg = Debug|Win32
-		{7F96D29D-CC05-4645-AF2C-229BB35EC327}.Debug|x86.Build.0 = Debug|Win32
-		{7F96D29D-CC05-4645-AF2C-229BB35EC327}.Release|x64.ActiveCfg = Release|x64
-		{7F96D29D-CC05-4645-AF2C-229BB35EC327}.Release|x64.Build.0 = Release|x64
-		{7F96D29D-CC05-4645-AF2C-229BB35EC327}.Release|x86.ActiveCfg = Release|Win32
-		{7F96D29D-CC05-4645-AF2C-229BB35EC327}.Release|x86.Build.0 = Release|Win32
+		{F0EF4413-1193-4BCD-A6E7-001A3399FE8E}.Debug|x64.ActiveCfg = Debug
+		{F0EF4413-1193-4BCD-A6E7-001A3399FE8E}.Debug|x86.ActiveCfg = Debug
+		{F0EF4413-1193-4BCD-A6E7-001A3399FE8E}.Release|x64.ActiveCfg = Release
+		{F0EF4413-1193-4BCD-A6E7-001A3399FE8E}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -185,7 +185,7 @@ void _Mouse_Recorder::Load_Recorded_Mouse_Events()
 {
 	if (mouse_moves.size() == 0)
 	{
-		std::cout << "Mouse wasnt be recorder yet" << '\n';
+		std::cout << "Mouse wasn't be recorder yet" << '\n';
 		std::this_thread::sleep_for(std::chrono::seconds(3));	//sleep for 1 second
 	}
 	else
@@ -214,22 +214,20 @@ void _Mouse_Recorder::Load_Recorded_Mouse_Events()
 						std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 						//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					}
-					//else if (mouse_moves[i].first.get_dwButtonState() == 514)
+					//else if (mouse_moves[i].first.get_dwButtonState() == 514) //left down
 					//{
 					//	//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					//	mouse_moves[i].first.left_mouse_click_down();
 					//	//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					//}
-
 					if (mouse_moves[i].first.get_dwButtonState() == 516)
 					{
-						
 						//mouse_moves[i].first.right_mouse_click_up();
 						mouse_moves[i].first.right_mouse_click();
 						std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 						//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					}
-					//else if (mouse_moves[i].first.get_dwButtonState() == 517)
+					//else if (mouse_moves[i].first.get_dwButtonState() == 517)	//right down
 					//{
 					//	//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					//	mouse_moves[i].first.right_mouse_click_down();
